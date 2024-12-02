@@ -19,8 +19,7 @@ const FreeCourses = () => {
 
         <View style={{ flex: 2, flexDirection: 'row', flexWrap: 'wrap', width: '100%', justifyContent: 'space-evenly', marginVertical: 20 }}>
           <TouchableOpacity style={styles.button}>
-            <Text style={styles.textButton}>📊 Educational
-              Channels</Text>
+            <Text style={styles.textButton}>📊 Educational Channels</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={() => handleClick('budgeting')}>
             <Text style={styles.textButton}>🎗️ Health
