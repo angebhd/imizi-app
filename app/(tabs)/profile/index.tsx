@@ -14,13 +14,11 @@ const Profile = () => {
 
         </View>
         <View>
-          <TouchableOpacity> My Family</TouchableOpacity>
-          <TouchableOpacity> Sign out</TouchableOpacity>
-          <TouchableOpacity> Terms and conditions</TouchableOpacity>
-          <TouchableOpacity> Privacy</TouchableOpacity>
-          <TouchableOpacity> My Family</TouchableOpacity>
-          <TouchableOpacity> My Family</TouchableOpacity>
-          <TouchableOpacity> My Family</TouchableOpacity>
+          <TouchableOpacity><Text>My Family</Text></TouchableOpacity>
+          <TouchableOpacity><Text>Terms and conditions</Text></TouchableOpacity>
+          <TouchableOpacity><Text>Privacy</Text></TouchableOpacity>
+          <TouchableOpacity><Text>Sign out </Text></TouchableOpacity>
+         
 
         </View>
 

@@ -20,6 +20,8 @@ const SignUpScreen = () => {
     if (resp.status === 201) {
       const a = storeToken.store(resp.data.token);
       router.replace('/(tabs)');
+    }else{
+      setPassword('');
     }
 
 

@@ -1,5 +1,6 @@
 import axios from "axios";
 import api from '@/services/api'
+import auth from "./auth";
 // const apiURL = "http://192.168.1.74:3000/api"
 const apiURL = api;
 
@@ -20,5 +21,31 @@ exports.signup = async ({ firstName, lastName, email, password }) => {
 
         // Optionally, you could throw the error or return a custom error message
         throw new Error("Signup failed, please try again later.");
+    }
+}
+exports.getData = async () =>{
+    try{
+        const token = await auth.get();
+        console.log("getData", token);
+        
+        if(token){
+            const response = await axios.post(`${apiURL}/users/getData`, {},  // Request body if needed
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`, // Attach the token here
+                  },
+                });
+            if (response.status == 200){
+                return response.data;
+            }
+        }
+        return null
+        
+
+    }catch(error){
+        console.log("Failed to get data: ")
+        console.error("Failed to get token: " + error);
+        return null;
+
     }
 }

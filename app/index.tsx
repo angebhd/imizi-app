@@ -2,22 +2,22 @@ import { Link, useRouter } from 'expo-router';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, ImageBackground, Image, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
 
-import getToken from '@/services/auth';
-
+import { getData } from '@/services/users'
+import { getUserData, storeUserData } from '@/services/userData';
 const LaunchingScreen = () => {
   const router = useRouter();
 
-  const [token, setToken] = useState<string | null | undefined>(null);
+  const [data, setToken] = useState<object | null | undefined>(null);
   const [loading, setLoading] = useState<boolean>(true); // To track loading state
 
 
   useEffect(() => {
     const fetchToken = async () => {
       try {
-        const retrievedToken = await getToken.get(); // Assuming getToken.get() is async
-        setToken(retrievedToken);
+        const data = await getData(); // Assuming getToken.get() is async
+        setToken(data);
 
-        if (retrievedToken) {
+        if (data) {
           router.replace('/(tabs)');
         } else {
           setLoading(false); // Set loading to false once token is retrieved (even if it's null)
