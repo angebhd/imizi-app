@@ -9,12 +9,12 @@ exports.signup = async ({ firstName, lastName, email, password }) => {
     try {
         // Attempt to send the POST request
         const response = await axios.post(`${apiURL}/users/signup`, { firstName, lastName, email, password });
-        
+
         const data = response.data;
         const status = response.status
-        console.log({data, status})
+        console.log({ data, status })
         // Return the response data if successful
-        return {data, status};
+        return { data, status };
     } catch (error) {
         // Log the error to the console
         console.error("Error during signup:", error.response ? error.response.data : error.message, axios);
@@ -23,26 +23,27 @@ exports.signup = async ({ firstName, lastName, email, password }) => {
         throw new Error("Signup failed, please try again later.");
     }
 }
-exports.getData = async () =>{
-    try{
+exports.getData = async () => {
+    try {
         const token = await auth.get();
         console.log("getData", token);
-        
-        if(token){
+
+        if (token) {
             const response = await axios.post(`${apiURL}/users/getData`, {},  // Request body if needed
                 {
-                  headers: {
-                    Authorization: `Bearer ${token}`, // Attach the token here
-                  },
+                    headers: {
+                        Authorization: `Bearer ${token}`, // Attach the token here
+                    },
                 });
-            if (response.status == 200){
+            if (response.status == 200) {
+                // console.log(response.data)
                 return response.data;
             }
         }
         return null
-        
 
-    }catch(error){
+
+    } catch (error) {
         console.log("Failed to get data: ")
         console.error("Failed to get token: " + error);
         return null;

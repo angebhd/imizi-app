@@ -5,14 +5,10 @@ import { StatusBar } from 'expo-status-bar';
 
 
 export default function TabLayout() {
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar style='dark' backgroundColor='#fff' />
-      <Tabs screenOptions={{ headerShown: false, }}>
-
-
-      </Tabs>
+      <Tabs screenOptions={{ headerShown: false, }} />
     </SafeAreaView>
   );
 }

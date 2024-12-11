@@ -1,7 +1,7 @@
-import { Stack } from "expo-router";
+import { Stack, Tabs } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 
-export default function RootLayout() {
+export default function freeCouseLayout() {
   return (
     <>
       <StatusBar style="auto" />

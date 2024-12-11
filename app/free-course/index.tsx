@@ -6,7 +6,7 @@ const FreeCourses = () => {
   const router = useRouter();
   const handleClick = (a: string) => {
 
-    router.navigate(`/${a}`)
+    router.navigate(`${a}`);
 
   }
 
