@@ -3,16 +3,22 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 
+import { signin } from '@/services/users';
+import storeToken from '@/services/auth'
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
-  const handleLogin = () => {
-    const handleNavigateToLogin = () => {
-      router.replace('/(tabs)'); // Navigate to the login screen
-    };
-    handleNavigateToLogin();
+  const handleLogin = async () => {
+    const resp = await signin({ email, password })
+    if (resp.status === 200) {
+      storeToken.store(resp.data.token);
+      router.replace('/(tabs)');
+    } else {
+      setPassword('');
+      setEmail('');
+    }
   };
 
 

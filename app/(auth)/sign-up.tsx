@@ -14,7 +14,6 @@ const SignUpScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-
   const handleSignUp = async () => {
     const resp = await signup({ firstName, lastName, email, password })
     if (resp.status === 201) {
@@ -22,9 +21,10 @@ const SignUpScreen = () => {
       router.replace('/(tabs)');
     }else{
       setPassword('');
+      setEmail('');
+      setfName('');
+      setlName('');
     }
-
-
   };
   return (
     <SafeAreaView style={styles.container}>

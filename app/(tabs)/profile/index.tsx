@@ -13,11 +13,13 @@ const Profile = () => {
   //getting user data from DB
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
+  const [familyName, setFamilyName] = useState('No family yet');
 
   const getUserData = async () => {
     const data = await users.getData();
     setUserName(data.firstName + " " + data.lastName);
     setEmail(data.email);
+    setFamilyName(data.family.name + " family")
   }
   getUserData();
 
@@ -29,7 +31,6 @@ const Profile = () => {
       console.log("Loug out success")
       router.navigate('/(auth)/sign-in')
     }else{console.log("logout failed")}
-
 
   }
   return (
@@ -46,8 +47,9 @@ const Profile = () => {
             style={{ marginRight: 10 }} // Adds spacing between the icon and text
           />
           <View>
-            <Text style={{ fontSize: 32, fontWeight: 'bold' }}> {userName} </Text>
-            <Text> {email} </Text>
+            <Text style={{ fontSize: 24, fontWeight: 'bold' , marginBottom:5}}>{userName} </Text>
+            <Text style={{color: '#00B98E', fontWeight: 'bold'}}> {familyName} </Text>
+            {/* <Text> {email} </Text> */}
           </View>
         </View>
         <View style={{ marginTop: 30 }}>
