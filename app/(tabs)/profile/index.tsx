@@ -1,10 +1,16 @@
 import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, StyleSheet } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import { useRouter } from 'expo-router'
+
 
 import users from '@/services/users';
+import auth from '@/services/auth';
 import { Ionicons } from '@expo/vector-icons';
 
 const Profile = () => {
+  const router = useRouter();
+
+  //getting user data from DB
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
 
@@ -14,6 +20,18 @@ const Profile = () => {
     setEmail(data.email);
   }
   getUserData();
+
+  // signout Logic
+  const signOut = async () => {
+    const status = await auth.remove();
+
+    if (status){
+      console.log("Loug out success")
+      router.navigate('/(auth)/sign-in')
+    }else{console.log("logout failed")}
+
+
+  }
   return (
     <SafeAreaView style={{ backgroundColor: '#fff', minHeight: '100%' }}>
       <ScrollView style={{ padding: 20 }}>
@@ -36,7 +54,7 @@ const Profile = () => {
           <TouchableOpacity style={styles.button}><Text style={styles.textButton}>My Family</Text><Text style={styles.textButtonArrow}> &gt; </Text></TouchableOpacity>
           <TouchableOpacity style={styles.button} ><Text style={styles.textButton} >Terms and conditions</Text><Text style={styles.textButtonArrow}> &gt; </Text></TouchableOpacity>
           <TouchableOpacity style={styles.button} ><Text style={styles.textButton} >Privacy</Text><Text style={styles.textButtonArrow}> &gt; </Text></TouchableOpacity>
-          <TouchableOpacity style={styles.button} ><Text style={styles.textButton} >Sign out </Text><Text style={styles.textButtonArrow}> &gt; </Text></TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={signOut}><Text style={styles.textButton} >Sign out </Text><Text style={styles.textButtonArrow}> &gt; </Text></TouchableOpacity>
         </View>
 
 
@@ -50,8 +68,8 @@ const Profile = () => {
 const styles = StyleSheet.create({
   button: {
     backgroundColor: '#79C3C52B',
-    marginVertical: 10,
-    paddingVertical: 5,
+    marginVertical: 2,
+    paddingVertical: 8,
     paddingHorizontal: 5,
     display: 'flex',
     flexDirection: 'row',
