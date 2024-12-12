@@ -14,7 +14,7 @@ const LoginScreen = () => {
     const resp = await signin({ email, password })
     if (resp.status === 200) {
       storeToken.store(resp.data.token);
-      router.replace('/(tabs)');
+      router.replace('/(tabs)/');
     } else {
       setPassword('');
       setEmail('');
@@ -32,6 +32,8 @@ const LoginScreen = () => {
       <TextInput
         style={styles.input}
         placeholder="Email"
+        autoCapitalize='none'
+
         value={email}
         onChangeText={setEmail}
       />
@@ -71,7 +73,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
     marginVertical: 10,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: '#79C3C52B'
+
   },
   button: {
     width: '100%',

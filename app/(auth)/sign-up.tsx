@@ -36,7 +36,6 @@ const SignUpScreen = () => {
           style={styles.input}
           placeholder="First Name"
           returnKeyType='next'
-
           value={firstName}
           onChangeText={setfName}
         />
@@ -89,16 +88,19 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
     marginVertical: 10,
+    backgroundColor: '#79C3C52B'
+
   },
   button: {
     width: '100%',
     height: 50,
-    backgroundColor: '#00c853',
+    backgroundColor: '#00B98E',
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
     marginVertical: 10,
   },
+  
   buttonText: {
     color: '#fff',
     fontWeight: 'bold',

@@ -22,15 +22,19 @@ const Profile = () => {
     setFamilyName(data.family.name + " family")
   }
   getUserData();
+  // go to family
+  const handlePress = (a:string) => {
+    router.navigate(a);
 
+  }
   // signout Logic
   const signOut = async () => {
     const status = await auth.remove();
 
-    if (status){
+    if (status) {
       console.log("Loug out success")
       router.navigate('/(auth)/sign-in')
-    }else{console.log("logout failed")}
+    } else { console.log("logout failed") }
 
   }
   return (
@@ -47,16 +51,28 @@ const Profile = () => {
             style={{ marginRight: 10 }} // Adds spacing between the icon and text
           />
           <View>
-            <Text style={{ fontSize: 24, fontWeight: 'bold' , marginBottom:5}}>{userName} </Text>
-            <Text style={{color: '#00B98E', fontWeight: 'bold'}}> {familyName} </Text>
+            <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 5 }}>{userName} </Text>
+            <Text style={{ color: '#00B98E', fontWeight: 'bold' }}> {familyName} </Text>
             {/* <Text> {email} </Text> */}
           </View>
         </View>
         <View style={{ marginTop: 30 }}>
-          <TouchableOpacity style={styles.button}><Text style={styles.textButton}>My Family</Text><Text style={styles.textButtonArrow}> &gt; </Text></TouchableOpacity>
-          <TouchableOpacity style={styles.button} ><Text style={styles.textButton} >Terms and conditions</Text><Text style={styles.textButtonArrow}> &gt; </Text></TouchableOpacity>
-          <TouchableOpacity style={styles.button} ><Text style={styles.textButton} >Privacy</Text><Text style={styles.textButtonArrow}> &gt; </Text></TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={signOut}><Text style={styles.textButton} >Sign out </Text><Text style={styles.textButtonArrow}> &gt; </Text></TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => handlePress("/family")}><Text style={styles.textButton}>My Family</Text><Ionicons name='arrow-forward-outline' size={24} /></TouchableOpacity>
+          <TouchableOpacity style={styles.button} ><Text style={styles.textButton} >Terms and conditions</Text><Ionicons name='arrow-forward-outline' size={24} /></TouchableOpacity>
+          <TouchableOpacity style={styles.button} ><Text style={styles.textButton} >Privacy</Text><Ionicons name='arrow-forward-outline' size={24} /></TouchableOpacity>
+
+          <TouchableOpacity style={{
+            backgroundColor: '#faa',
+            marginTop: 30,
+            paddingVertical: 8,
+            paddingHorizontal: 5,
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            borderRadius: 10
+
+          }} onPress={signOut}><Text style={styles.textButton} >Sign out </Text><Ionicons name='exit-outline' size={24} /></TouchableOpacity>
         </View>
 
 
@@ -70,7 +86,7 @@ const Profile = () => {
 const styles = StyleSheet.create({
   button: {
     backgroundColor: '#79C3C52B',
-    marginVertical: 2,
+    marginVertical: 5,
     paddingVertical: 8,
     paddingHorizontal: 5,
     display: 'flex',
@@ -83,10 +99,7 @@ const styles = StyleSheet.create({
   textButton: {
     fontSize: 18,
   },
-  textButtonArrow: {
-    fontWeight: 'bold',
-    fontSize: 24
-  }
+
 
 })
 

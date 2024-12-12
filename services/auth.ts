@@ -13,7 +13,6 @@ const storeToken = async (token : string): Promise<undefined| true >=> {
 const getToken = async () => {
     try {
         const token = await AsyncStorage.getItem('token');
-        console.log(token);
         if (token !== null) {
             return token;
         } else {

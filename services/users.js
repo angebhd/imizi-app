@@ -44,7 +44,6 @@ exports.signin = async ({email, password }) => {
 exports.getData = async () => {
     try {
         const token = await auth.get();
-        console.log("getData", token);
 
         if (token) {
             const response = await axios.post(`${apiURL}/users/getData`, {},  // Request body if needed
@@ -55,6 +54,7 @@ exports.getData = async () => {
                 });
             if (response.status == 200) {
                 // console.log(response.data)
+                // console.log(response.data.invite.name)
                 return response.data;
             }
         }
