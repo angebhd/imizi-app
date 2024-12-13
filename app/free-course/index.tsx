@@ -18,14 +18,14 @@ const FreeCourses = () => {
         <Text style={{ color: "#7C82A1", fontSize: 16, textAlign: "justify", marginTop: 20 }}>You have a full access to different courses to facilitate each family dynamics.</Text>
 
         <View style={{ flex: 2, flexDirection: 'row', flexWrap: 'wrap', width: '100%', justifyContent: 'space-evenly', marginVertical: 20 }}>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={()=>handleClick('free/course/educ-chan')}>
             <Text style={styles.textButton}>📊 Educational Channels</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => handleClick('budgeting')}>
+          <TouchableOpacity style={styles.button} onPress={() => handleClick('/free-course/health')}>
             <Text style={styles.textButton}>🎗️ Health
               & Wellness</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => handleClick('free-course')}>
+          <TouchableOpacity style={styles.button} onPress={() => handleClick('/free-course/parenting')}>
             <Text style={styles.textButton}>🛡️ Parenting
               Courses</Text>
           </TouchableOpacity>

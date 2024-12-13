@@ -8,7 +8,7 @@ const Explore = () => {
   const router = useRouter();
   const handleClick = (a:string)=>{
 
-    router.navigate(`/${a}`)
+    router.navigate(a);
 
   }
 
@@ -22,10 +22,10 @@ const Explore = () => {
             <TouchableOpacity style={styles.button}>
               <Text style={styles.textButton}>⏳ TODO Activities</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={() => handleClick('budgeting')}>
+            <TouchableOpacity style={styles.button} onPress={() => handleClick('/budgeting')}>
               <Text style={styles.textButton}>📊 Budgeting</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={() => handleClick('free-course')}>
+            <TouchableOpacity style={styles.button} onPress={() => handleClick('/free-course')}>
               <Text style={styles.textButton}>📚 Free
                 Courses</Text>
             </TouchableOpacity>
@@ -41,7 +41,7 @@ const Explore = () => {
               <Text style={styles.textButton}>⛑️ GBV Information
                 and Report</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={()=> handleClick("/quiz/daily")}>
               <Text style={styles.textButton}>📝  Quiz
                 Challenges</Text>
             </TouchableOpacity>

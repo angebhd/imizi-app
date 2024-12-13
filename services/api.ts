@@ -1,1 +1,1 @@
-export default "http://192.168.1.74:3000/api"
+export default "http://192.168.173.151:3000/api"

@@ -64,7 +64,7 @@ const Profile = () => {
           <TouchableOpacity style={{
             backgroundColor: '#faa',
             marginTop: 30,
-            paddingVertical: 8,
+            paddingVertical: 12,
             paddingHorizontal: 5,
             display: 'flex',
             flexDirection: 'row',
@@ -86,8 +86,8 @@ const Profile = () => {
 const styles = StyleSheet.create({
   button: {
     backgroundColor: '#79C3C52B',
-    marginVertical: 5,
-    paddingVertical: 8,
+    marginVertical: 2,
+    paddingVertical: 12,
     paddingHorizontal: 5,
     display: 'flex',
     flexDirection: 'row',

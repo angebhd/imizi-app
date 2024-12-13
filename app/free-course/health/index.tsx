@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-const ParentingCourse = () => {
+const Health = () => {
   return (
     <View>
-      <Text>ParentingCourse</Text>
+      <Text>Health</Text>
     </View>
   )
 }
 
-export default ParentingCourse
+export default Health
 
 const styles = StyleSheet.create({})

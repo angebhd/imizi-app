@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, TextInput, TouchableOpacity, SafeAreaView, Keyb
 import { useRouter } from 'expo-router';
 
 import { signup } from '@/services/users';
-import storeToken  from '@/services/auth'
+import storeToken from '@/services/auth'
 
 
 const SignUpScreen = () => {
@@ -19,7 +19,7 @@ const SignUpScreen = () => {
     if (resp.status === 201) {
       const a = storeToken.store(resp.data.token);
       router.replace('/(tabs)');
-    }else{
+    } else {
       setPassword('');
       setEmail('');
       setfName('');
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginVertical: 10,
   },
-  
+
   buttonText: {
     color: '#fff',
     fontWeight: 'bold',
