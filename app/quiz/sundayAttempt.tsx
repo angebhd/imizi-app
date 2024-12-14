@@ -32,25 +32,27 @@ type Question = {
 
 const DailyAttempt: React.FC = () => {
   const route = useRoute();
-  const { quizId } = route.params as { quizId: string };
+  // const { quizId } = route.params as { quizId: string };
 
   const [questions, setQuestions] = useState<Question[]>([]);
   const [title, setTitle] = useState<string>();
+  const [quizId, setQuizId] = useState<string>();
   const [userResponses, setUserResponses] = useState<{ [key: number]: string }>({});
   const [loading, setLoading] = useState(true);
   const [resultsVisible, setResultsVisible] = useState(false);
   const [score, setScore] = useState(0);
   ///
-      const navigation = useNavigation();
-  
+  const navigation = useNavigation();
+
 
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
         setLoading(true);
-        const response = await quiz.getQuiz(quizId); // Replace with your API call
+        const response = await quiz.getQuizSunday(); // Replace with your API call
         setTitle(response.quiz.title);
         setQuestions(response.quiz.questions);
+        setQuizId(response.quiz._id);
       } catch (error) {
         console.error('Error fetching quiz questions:', error);
       } finally {
@@ -59,7 +61,8 @@ const DailyAttempt: React.FC = () => {
     };
 
     fetchQuestions();
-  }, [quizId]);
+    // }, [quizId]);
+  }, []);
 
   const handleOptionSelect = (questionIndex: number, selectedOption: string) => {
     if (!resultsVisible) {
@@ -99,7 +102,7 @@ const DailyAttempt: React.FC = () => {
         quizId,
         answers: formattedAnswers,
       };
-      await quiz.submitDaily(payload);
+      await quiz.submitSunday(payload);
 
       setScore(totalScore);
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -140,13 +143,13 @@ const DailyAttempt: React.FC = () => {
   );
 
   return (
-    <SafeAreaView style={{ backgroundColor: '#fff', minHeight: '100%' , paddingTop: 40}}>
+    <SafeAreaView style={{ backgroundColor: '#fff', minHeight: '100%', paddingTop: 40 }}>
       <View style={styles.container}>
         {loading ? (
           <ActivityIndicator size="large" color="#007bff" />
         ) : (
           <>
-          <Text style={styles.title}>{title}</Text>
+            <Text style={styles.title}>{title}</Text>
             <FlatList
               data={questions}
               keyExtractor={(item, index) => `${item.questionText}-${index}`}
@@ -161,7 +164,7 @@ const DailyAttempt: React.FC = () => {
               <View>
 
                 <Text style={styles.scoreText}>Your Score: {score}</Text>
-                <TouchableOpacity style={{backgroundColor: '#ccc'}} onPress={() => navigation.goBack()}><Text style={styles.goBack}> Go back to quizzes</Text></TouchableOpacity>
+                <TouchableOpacity style={{ backgroundColor: '#ccc' }} onPress={() => navigation.goBack()}><Text style={styles.goBack}> Go back to quizzes</Text></TouchableOpacity>
               </View>
             )}
           </>
@@ -180,7 +183,7 @@ const styles = StyleSheet.create({
   questionList: {
     paddingBottom: 20,
   },
-  title:{
+  title: {
     fontSize: 24,
     fontWeight: 'bold',
     fontStyle: 'italic',

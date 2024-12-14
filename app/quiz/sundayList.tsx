@@ -20,6 +20,7 @@ type Score = {
 
 const DailyQuiz: React.FC = () => {
     const [quizzes, setQuizzes] = useState<Quiz[]>([]);
+    const [header, setHeader] = useState<string>();
     const [scores, setScores] = useState<Score[]>([]);
     const [loading, setLoading] = useState(true);
     const navigation = useNavigation();
@@ -31,10 +32,11 @@ const DailyQuiz: React.FC = () => {
             try {
                 setLoading(true);
                 // Replace with your backend endpoints
-                const quizResponse = await quiz.getDailyAll();
+                const quizResponse = await quiz.getQuizSunday();
                 await quiz.getScores();
                 // const scoresResponse = await axios.get('http://<your-backend-url>/api/scores');
-                setQuizzes(quizResponse.quizzes);
+                setQuizzes(quizResponse.quiz.quizzes);
+                setHeader(quizResponse.quiz.title)
                 // setScores(scoresResponse.data.scores);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -54,11 +56,11 @@ const DailyQuiz: React.FC = () => {
         </TouchableOpacity>
     );
     return (
-        <SafeAreaView style={{ backgroundColor: '#fff', minHeight: '100%' }}>
+        <SafeAreaView style={{ backgroundColor: '#fff', minHeight: '100%', paddingTop: 60}}>
                 <View style={styles.container}>
-                    <Text style={styles.header}>Available Quizzes</Text>
+                    <Text style={styles.header}>{header}</Text>
                     {loading ? (
-                        <ActivityIndicator size="large" color="#00B98E" />
+                        <ActivityIndicator size="large" color="#007bff" />
                     ) : (
                         <FlatList
                             data={quizzes}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeScreen from '@/app/quiz/index'; // Adjust path as needed
+import HomeScreen from '@/app/quiz'; // Adjust path as needed
 import DailyQuiz from '@/app/quiz/dailyList';
 import DailyAttempt from './dailyAttempt';
 // import SundayQuizScreen from '@/app/quiz/QuizScreen';
