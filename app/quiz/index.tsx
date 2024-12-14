@@ -1,77 +1,32 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
-import axios from 'axios';
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-// Define quiz type
-type Quiz = {
-  _id: string;
-  title: string;
-  type: string;
-  status: string;
-  questions: { questionText: string; options: { text: string; isCorrect: boolean }[] }[];
+// Define the type for navigation routes
+type RootStackParamList = {
+  DailyQuiz: undefined;
+  SundayQuiz: undefined;
 };
 
-type Score = {
-  quizId: string;
-  score: number;
-};
-
-const HomeQuiz: React.FC = () => {
-  const [quizzes, setQuizzes] = useState<Quiz[]>([]);
-  const [scores, setScores] = useState<Score[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  // Fetch quizzes and scores from the backend
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        // Replace with your backend endpoints
-        const quizResponse = await axios.get('http://<your-backend-url>/api/quizzes');
-        const scoresResponse = await axios.get('http://<your-backend-url>/api/scores');
-        setQuizzes(quizResponse.data.quizzes);
-        setScores(scoresResponse.data.scores);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  const renderQuizItem = ({ item }: { item: Quiz }) => (
-    <TouchableOpacity style={styles.quizItem}>
-      <Text style={styles.quizTitle}>{item.title}</Text>
-      <Text style={styles.quizType}>Type: {item.type}</Text>
-      <Text style={styles.quizStatus}>Status: {item.status}</Text>
-    </TouchableOpacity>
-  );
+const HomeScreen: React.FC = () => {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Available Quizzes</Text>
-      {loading ? (
-        <ActivityIndicator size="large" color="#007bff" />
-      ) : (
-        <FlatList
-          data={quizzes}
-          keyExtractor={(item) => item._id}
-          renderItem={renderQuizItem}
-          contentContainerStyle={styles.quizList}
-        />
-      )}
-      <Text style={styles.header}>Your Scores</Text>
-      {scores.length > 0 ? (
-        scores.map((score) => (
-          <Text key={score.quizId} style={styles.scoreItem}>
-            Quiz ID: {score.quizId} - Score: {score.score}%
-          </Text>
-        ))
-      ) : (
-        <Text style={styles.noScores}>No scores available yet.</Text>
-      )}
+      <Text style={styles.title}>Welcome to Quiz App</Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate('quiz/dailyList')}
+      >
+        <Text style={styles.buttonText}>Daily Quizzes</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate('quiz/dailyList')}
+      >
+        <Text style={styles.buttonText}>Sunday Quiz</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -79,47 +34,27 @@ const HomeQuiz: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: '#f8f9fa',
   },
-  header: {
-    fontSize: 20,
+  title: {
+    fontSize: 24,
     fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  button: {
+    backgroundColor: '#007bff',
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
     marginVertical: 10,
   },
-  quizList: {
-    paddingBottom: 20,
-  },
-  quizItem: {
-    backgroundColor: '#ffffff',
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 12,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 3,
-  },
-  quizTitle: {
+  buttonText: {
+    color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
   },
-  quizType: {
-    fontSize: 14,
-    color: '#6c757d',
-  },
-  quizStatus: {
-    fontSize: 14,
-    color: '#28a745',
-  },
-  scoreItem: {
-    fontSize: 14,
-    marginBottom: 8,
-  },
-  noScores: {
-    fontSize: 14,
-    color: '#6c757d',
-  },
 });
 
-export default HomeQuiz;
+export default HomeScreen;

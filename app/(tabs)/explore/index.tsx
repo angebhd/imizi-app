@@ -1,6 +1,5 @@
 import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, StyleSheet } from 'react-native'
 import React from 'react'
-import MyHeader from '@/component/Header'
 import { useRouter } from 'expo-router'
 
 
@@ -41,7 +40,7 @@ const Explore = () => {
               <Text style={styles.textButton}>⛑️ GBV Information
                 and Report</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={()=> handleClick("/quiz/daily")}>
+            <TouchableOpacity style={styles.button} onPress={()=> handleClick("/quiz")}>
               <Text style={styles.textButton}>📝  Quiz
                 Challenges</Text>
             </TouchableOpacity>
