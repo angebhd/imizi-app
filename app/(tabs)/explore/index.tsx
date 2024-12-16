@@ -36,7 +36,7 @@ const Explore = () => {
               <Text style={styles.textButton}>⚖️ Government
                 Programs</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={() => handleClick('/gbv')}>
               <Text style={styles.textButton}>⛑️ GBV Information
                 and Report</Text>
             </TouchableOpacity>
