@@ -1,77 +1,82 @@
-import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
-import { useRouter } from 'expo-router';
+import React, { useState } from 'react';
+import { View, Text, FlatList, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import YoutubePlayer from 'react-native-youtube-iframe';
 
-const FreeCourses = () => {
-  const router = useRouter();
-  const handleClick = (a: string) => {
+const courses = [
+  { id: '1', type: 'text', title: 'Building Strong Relationships', content: 'Family cohesion starts with communication...' },
+  { id: '2', type: 'video', title: 'Overcoming Challenges', content: 'dQw4w9WgXcQ' }, // YouTube Video ID
+  // { id: '3', type: 'audio', title: 'Family Traditions', content: require('./assets/family_audio.mp3') },
+];
 
-    router.navigate(`${a}`);
-
+const CourseItem = ({ course }) => {
+  switch (course.type) {
+    case 'text':
+      return (
+        <View style={styles.courseContainer}>
+          <Text style={styles.title}>{course.title}</Text>
+          <Text style={styles.content}>{course.content}</Text>
+        </View>
+      );
+    case 'video':
+      return (
+        <View style={styles.courseContainer}>
+          <Text style={styles.title}>{course.title}</Text>
+          <YoutubePlayer
+            height={200}
+            play={false}
+            videoId={course.content}
+          />
+        </View>
+      );
+    case 'audio':
+      return (
+        <View style={styles.courseContainer}>
+          <Text style={styles.title}>{course.title}</Text>
+          <Text>Audio Player Coming Soon</Text> {/* Replace with your audio player */}
+        </View>
+      );
+    default:
+      return null;
   }
+};
 
+const FamilyCohesionApp = () => {
   return (
-    <SafeAreaView style={{backgroundColor: '#fff', minHeight: '100%'}}>
+    <SafeAreaView style={{ backgroundColor: '#fff', minHeight: '100%' }}>
       <ScrollView style={{ padding: 20 }}>
-
         <Text style={{ color: '#000', fontSize: 24, fontWeight: 'bold', }}>Free courses</Text>
         <Text style={{ color: "#7C82A1", fontSize: 16, textAlign: "justify", marginTop: 20 }}>You have a full access to different courses to facilitate each family dynamics.</Text>
 
-        <View style={{ flex: 2, flexDirection: 'row', flexWrap: 'wrap', width: '100%', justifyContent: 'space-evenly', marginVertical: 20 }}>
-          <TouchableOpacity style={styles.button} onPress={()=>handleClick('free/course/educ-chan')}>
-            <Text style={styles.textButton}>📊 Educational Channels</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => handleClick('/free-course/health')}>
-            <Text style={styles.textButton}>🎗️ Health
-              & Wellness</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => handleClick('/free-course/parenting')}>
-            <Text style={styles.textButton}>🛡️ Parenting
-              Courses</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.textButton}>🧲 Children’s
-              Learning</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.textButton}>🛡️ Parenting
-              Workshops</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.textButton}>Communication</Text>
-          </TouchableOpacity>
-        </View>
-
-
+        <FlatList
+          data={courses}
+          renderItem={({ item }) => <CourseItem course={item} />}
+          keyExtractor={(item) => item.id}
+        />
       </ScrollView>
     </SafeAreaView>
-  )
-}
 
+  );
+};
 
 const styles = StyleSheet.create({
-  button: {
-    padding: 10,
-    marginTop: 10,
-    marginBottom: 10,
-    width: '40%',
-    backgroundColor: '#79C3C52B',
-    borderColor: '#00B98E',
-    borderStyle: 'solid',
+  courseContainer: {
+    padding: 16,
+    margin: 16,
     borderWidth: 1,
-    borderRadius: 10,
-    flexDirection: 'row',
-    flexWrap: 'nowrap',
-    alignItems: 'center',
-
-
+    borderColor: '#ccc',
+    borderRadius: 8,
+    backgroundColor: '#fff',
   },
-  textButton: {
-    flex: 1,
-    textAlign: 'center',
-    fontSize: 16,
-    color: '#666C8E'
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  content: {
+    fontSize: 14,
+    lineHeight: 20,
+  },
+});
 
-  }
-})
-export default FreeCourses
+export default FamilyCohesionApp;
