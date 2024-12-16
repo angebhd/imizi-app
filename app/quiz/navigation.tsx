@@ -15,6 +15,9 @@ const AppNavigator = () => (
       <Stack.Screen name="DailyQuiz" component={DailyQuiz} />
       <Stack.Screen name="SundayQuiz" component={DailyQuiz} />
       <Stack.Screen name="dailyAttempt" component={DailyAttempt} />
+
+      <Stack.Screen name="free-course/CourseContent" component={CourseContentScreen} />
+
     </Stack.Navigator>
   </NavigationContainer>
 );
