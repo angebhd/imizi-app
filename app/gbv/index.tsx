@@ -1,13 +1,15 @@
 import { Linking, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
+import { useRouter } from 'expo-router'
 
 const GBV = () => {
+    const router = useRouter();
     return (
         <SafeAreaView style={{ backgroundColor: '#FFF9FA', maxHeight: '100%', padding: 20, marginBottom: 20 }}>
             <Text style={{ color: '#000', fontSize: 24, fontWeight: 'bold', padding: 10, marginTop: 30 }}>GBV Information ⛑️ </Text>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <Text style={{ color: "#7C82A1", fontSize: 16, textAlign: "justify", marginTop: 20 }}>Gender-based violence (GBV) is violence committed against a person because of his or her sex or gender. It is forcing another person to do something against his or her will through violence, coercion, threats, deception, cultural expectations, or economic means. Although the majority of survivors of GBV are girls and women, boys and men can also be targeted through GBV.</Text>
-                <Text style={{ textAlign: 'right', color: '#00B98E', fontWeight: 'bold' }}>Report your Gbv</Text>
+                {/* <Text style={{ textAlign: 'right', color: '#00B98E', fontWeight: 'bold' }}>Report your Gbv</Text> */}
                 <Text style={{ color: '#000', fontSize: 20, fontWeight: 'bold', padding: 10, marginTop: 30 }}>Forms of gender-based violence </Text>
                 <Text style={styles.textt}>There are several forms that gender-based violence can take:</Text>
 
@@ -29,7 +31,7 @@ const GBV = () => {
 
                 <View style={{marginTop: 50, flexDirection:'row', flex:2, width: '100%', justifyContent: 'space-around', alignContent: 'space-around'}}>
                     <TouchableOpacity style={styles.touchable} onPress={() => Linking.openURL("https://www.who.int/news-room/fact-sheets/detail/violence-against-women")}><Text style={styles.txt}>Learn More About GBV </Text></TouchableOpacity>
-                    <TouchableOpacity style={styles.touchable}><Text style={{color: 'red', fontWeight: 'bold', textAlign: 'center'}}>Report a GBV case </Text></TouchableOpacity>
+                    <TouchableOpacity style={styles.touchable} onPress={()=> router.navigate('/gbv/report')}><Text style={{color: 'red', fontWeight: 'bold', textAlign: 'center'}}>Report a GBV case </Text></TouchableOpacity>
                 </View>
             </ScrollView>
         </SafeAreaView>
