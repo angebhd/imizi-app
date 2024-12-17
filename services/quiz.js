@@ -70,7 +70,6 @@ exports.getQuiz = async (quizId) => {
                         quizId, // Pass quizId here, which will be appended as ?quizId=value
                     },
                 });
-                console.log(response)
             if (response.status == 201) {
                 return response.data;
             }
@@ -97,7 +96,6 @@ exports.getQuizSunday = async (quizId) => {
                         quizId, // Pass quizId here, which will be appended as ?quizId=value
                     },
                 });
-                console.log(response)
             if (response.status == 201) {
                 return response.data;
             }
@@ -122,6 +120,31 @@ exports.getDailyAll = async () => {
                     },
                 });
             if (response.status == 201) {
+                return response.data;
+            }
+        }
+        return null
+    } catch (error) {
+        console.log("Failed to get data: ")
+        console.error(error);
+        return null;
+
+    }
+}
+
+exports.getSundayLeaderboard = async () => {
+    try {
+        const token = await auth.get();
+        console.log(token);
+        if (token) {
+            const response = await axios.get(`${apiURL}/quiz/sunday/leaderboard`,  // Request body if needed
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`, // Attach the token here
+                    },
+                });
+                console.log(response.data.leaderboard)
+            if (response.status == 200) {
                 return response.data;
             }
         }

@@ -20,8 +20,8 @@ type Result = {
 };
 
 type LeaderboardEntry = {
-  userName: string;
-  score: number;
+  familyName: string;
+  averageScore: number;
 };
 
 // Define the type for navigation routes
@@ -81,9 +81,9 @@ const HomeScreen: React.FC = () => {
 
   const renderLeaderboardItem = ({ item, index }: { item: LeaderboardEntry; index: number }) => (
     <View style={styles.leaderboardItem}>
-      <Text style={styles.leaderboardRank}>#{index + 1}</Text>
-      <Text style={styles.leaderboardName}>{item.userName}</Text>
-      <Text style={styles.leaderboardScore}>{item.score}%</Text>
+      <Text style={styles.leaderboardRank}>{index + 1}</Text>
+      <Text style={styles.leaderboardName}>{item.familyName} family</Text>
+      <Text style={styles.leaderboardScore}>{item.averageScore}%</Text>
     </View>
   );
   ///
@@ -136,7 +136,7 @@ const HomeScreen: React.FC = () => {
             ) : leaderboard.length > 0 ? (
               <FlatList
                 data={leaderboard}
-                keyExtractor={(item, index) => `${item.userName}-${index}`}
+                keyExtractor={(item, index) => `${item.familyName}-${index}`}
                 renderItem={renderLeaderboardItem}
                 contentContainerStyle={styles.leaderboardList}
               />
@@ -226,12 +226,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: '#ffffff',
     padding: 16,
-    borderRadius: 8,
-    marginBottom: 12,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 3,
+    borderRadius: 1,
+    marginBottom: 0,
+    borderColor: 'black',
+    borderBottomWidth: 1,
   },
   leaderboardRank: {
     fontSize: 16,
@@ -247,7 +245,7 @@ const styles = StyleSheet.create({
   leaderboardScore: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#28a745',
+    color: '#00B98E',
   },
   noDataText: {
     fontSize: 14,

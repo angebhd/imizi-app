@@ -149,6 +149,7 @@ const DailyAttempt: React.FC = () => {
           <ActivityIndicator size="large" color="#007bff" />
         ) : (
           <>
+            <Text style={{color: '#00B98E', textTransform: 'uppercase', textAlign: 'center', fontSize: 24, borderBottomWidth: 3, fontWeight: 'bold'}}>Special Sunday</Text>
             <Text style={styles.title}>{title}</Text>
             <FlatList
               data={questions}
@@ -164,7 +165,7 @@ const DailyAttempt: React.FC = () => {
               <View>
 
                 <Text style={styles.scoreText}>Your Score: {score}</Text>
-                <TouchableOpacity style={{ backgroundColor: '#ccc' }} onPress={() => navigation.goBack()}><Text style={styles.goBack}> Go back to quizzes</Text></TouchableOpacity>
+                <TouchableOpacity style={{ backgroundColor: '#00B98E11' }} onPress={() => navigation.goBack()}><Text style={styles.goBack}> Go back to quizzes</Text></TouchableOpacity>
               </View>
             )}
           </>
@@ -244,7 +245,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#28a745',
-    marginTop: 20,
+    margin: 20,
     textAlign: 'center',
   },
   goBack: {
