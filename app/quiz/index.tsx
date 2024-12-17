@@ -1,36 +1,19 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native';
-// import { ScrollView } from 'react-native';
-
+import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 
 import { useEffect, useState } from 'react';
 import { FlatList, ActivityIndicator } from 'react-native';
 import quiz from '@/services/quiz';
 import user from '@/services/users';
-import { ScrollView } from 'react-native-gesture-handler';
 
-// Define types
-type Result = {
-  // quizId: string;
-  title: string;
-  // type: string;
-  score: number;
-  submittedAt: string;
-};
+// ... (keep your existing type definitions)
 
-type LeaderboardEntry = {
-  familyName: string;
-  averageScore: number;
-};
-
-// Define the type for navigation routes
-type RootStackParamList = {
-  DailyQuiz: undefined;
-  SundayQuiz: undefined;
-};
+const { width } = Dimensions.get('window');
 
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -76,212 +59,277 @@ const HomeScreen: React.FC = () => {
     fetchLeaderboard();
   }, []);
 
-  //////
-
   const renderResultItem = ({ item }: { item: Result }) => (
     <View style={styles.resultItem}>
-      <Text style={styles.resultTitle}>{item.title}</Text>
-      <Text style={styles.resultType}>Type: {item.type}</Text>
-      <Text style={styles.resultScore}>Score: {item.score}%</Text>
+      <View style={styles.resultHeader}>
+        <Text style={styles.resultTitle} numberOfLines={1}>{item.title}</Text>
+        <Text style={styles.resultScore}>{item.score}%</Text>
+      </View>
       <Text style={styles.resultDate}>
-        Submitted At: {new Date(item.submittedAt).toLocaleString()}
+        <Ionicons name="time-outline" size={14} color="#6c757d" /> 
+        {new Date(item.submittedAt).toLocaleString()}
       </Text>
     </View>
   );
 
   const renderLeaderboardItem = ({ item, index }: { item: LeaderboardEntry; index: number }) => (
     <View style={styles.leaderboardItem}>
-      <Text style={styles.leaderboardRank}>{index + 1}</Text>
-      <Text style={styles.leaderboardName}>{item.familyName} family</Text>
+      <View style={styles.leaderboardRankContainer}>
+        <Text style={styles.leaderboardRank}>{index + 1}</Text>
+      </View>
+      <Text style={styles.leaderboardName}>{item.familyName} Family</Text>
       <Text style={styles.leaderboardScore}>{item.averageScore}%</Text>
     </View>
   );
-  ///
 
   return (
-    <SafeAreaView style={styles.container}>
-      <FlatList
-        data={[{ key: 'content' }]}
-        renderItem={() => (
-          <>
-            {/* Welcome Section */}
-            <View style={styles.welcomeSection}>
-              <Text style={styles.title}>Welcome to the Quiz Section</Text>
-              <Text>Challenge yourself by answering questions that will help you to strengthen the cohesion of your family</Text>
-              <View style={styles.containerButton}>
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => navigation.navigate('quiz/dailyList')}
-                >
-                  <Text style={styles.buttonText}>Daily Quizzes</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => navigation.navigate('quiz/sundayAttempt')}
-                >
-                  <Text style={styles.buttonText}>Sunday Quiz</Text>
-                </TouchableOpacity>
+    <LinearGradient 
+      colors={['#F7F9FC', '#E6F0FF']} 
+      style={styles.gradientContainer}
+    >
+      <SafeAreaView style={styles.container}>
+        <FlatList
+          data={[{ key: 'content' }]}
+          renderItem={() => (
+            <>
+              {/* Welcome Section */}
+              <View style={styles.welcomeSection}>
+                <Text style={styles.greeting}>Wlcome to the quiz section!</Text>
+                <Text style={styles.subtitle}>
+                  Strengthen your family bonds through engaging quizzes
+                </Text>
+                
+                <View style={styles.quickActionContainer}>
+                  <TouchableOpacity
+                    style={styles.quickActionButton}
+                    onPress={() => navigation.navigate('quiz/dailyList')}
+                  >
+                    <Ionicons name="calendar-outline" size={24} color="white" />
+                    <Text style={styles.quickActionButtonText}>Daily Quizzes</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.quickActionButton}
+                    onPress={() => navigation.navigate('quiz/sundayAttempt')}
+                  >
+                    <Ionicons name="trophy-outline" size={24} color="white" />
+                    <Text style={styles.quickActionButtonText}>Sunday Quiz</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
 
-            {/* Dashboard Section */}
-            <View style={styles.dashboardSection}>
-              <Text style={styles.header}>Dashboard</Text>
+              {/* Dashboard Section */}
+              <View style={styles.dashboardSection}>
+                <Text style={styles.sectionTitle}>Your Quiz Dashboard</Text>
 
-              {/* Your Quiz Results */}
-              <Text style={styles.subHeader}>Your Quiz Results</Text>
-              {loadingResults ? (
-                <ActivityIndicator size="large" color="#007bff" />
-              ) : userResults.length > 0 ? (
-                <FlatList
-                  data={userResults}
-                  keyExtractor={(item) => item.quizId}
-                  renderItem={renderResultItem}
-                  scrollEnabled={false}
-                  contentContainerStyle={styles.resultsList}
-                />
-              ) : (
-                <Text style={styles.noDataText}>No results available yet.</Text>
-              )}
+                {/* Your Quiz Results */}
+                <View style={styles.sectionContainer}>
+                  <View style={styles.sectionHeader}>
+                    <Ionicons name="document-text-outline" size={24} color="#00B98E" />
+                    <Text style={styles.sectionHeaderText}>Your Results</Text>
+                  </View>
+                  {loadingResults ? (
+                    <ActivityIndicator size="large" color="#00B98E" />
+                  ) : userResults.length > 0 ? (
+                    <FlatList
+                      data={userResults}
+                      keyExtractor={(item) => item.quizId}
+                      renderItem={renderResultItem}
+                      scrollEnabled={false}
+                      contentContainerStyle={styles.resultsList}
+                    />
+                  ) : (
+                    <View style={styles.emptyState}>
+                      <Ionicons name="sad-outline" size={48} color="#6c757d" />
+                      <Text style={styles.emptyStateText}>No quiz results yet</Text>
+                    </View>
+                  )}
+                </View>
 
-              {/* Leaderboard Section */}
-              <Text style={styles.subHeader}>Sunday Quiz Leaderboard</Text>
-              {loadingLeaderboard ? (
-                <ActivityIndicator size="large" color="#007bff" />
-              ) : leaderboard.length > 0 ? (
-                <FlatList
-                  data={leaderboard}
-                  keyExtractor={(item, index) => `${item.familyName}-${index}`}
-                  renderItem={renderLeaderboardItem}
-                  scrollEnabled={false}
-                  contentContainerStyle={styles.leaderboardList}
-                />
-              ) : (
-                <Text style={styles.noDataText}>No leaderboard data available yet.</Text>
-              )}
-            </View>
-          </>
-        )}
-        showsVerticalScrollIndicator={true}
-      />
-    </SafeAreaView>
+                {/* Leaderboard Section */}
+                <View style={styles.sectionContainer}>
+                  <View style={styles.sectionHeader}>
+                    <Ionicons name="podium-outline" size={24} color="#00B98E" />
+                    <Text style={styles.sectionHeaderText}>Sunday Leaderboard</Text>
+                  </View>
+                  {loadingLeaderboard ? (
+                    <ActivityIndicator size="large" color="#00B98E" />
+                  ) : leaderboard.length > 0 ? (
+                    <FlatList
+                      data={leaderboard}
+                      keyExtractor={(item, index) => `${item.familyName}-${index}`}
+                      renderItem={renderLeaderboardItem}
+                      scrollEnabled={false}
+                      contentContainerStyle={styles.leaderboardList}
+                    />
+                  ) : (
+                    <View style={styles.emptyState}>
+                      <Ionicons name="trophy-outline" size={48} color="#6c757d" />
+                      <Text style={styles.emptyStateText}>No leaderboard data</Text>
+                    </View>
+                  )}
+                </View>
+              </View>
+            </>
+          )}
+          showsVerticalScrollIndicator={false}
+        />
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
+  gradientContainer: {
+    flex: 1,
+  },
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    paddingTop: 80
   },
   welcomeSection: {
     padding: 20,
+    paddingTop: 50,
   },
-  dashboardSection: {
-    padding: 20,
+  greeting: {
+    fontSize: 28,
+    fontWeight: '700',
+    color: '#333',
+    marginBottom: 10,
   },
-  containerButton: {
-    flex: 1,
-    flexDirection: 'row',
-    // justifyContent: 'space-around',
-    // alignItems: 'center',
-    backgroundColor: '#f8f9fa',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+  subtitle: {
+    fontSize: 16,
+    color: '#666',
     marginBottom: 20,
   },
-  button: {
+  quickActionContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  quickActionButton: {
     backgroundColor: '#00B98E',
-    paddingVertical: 8,
-    paddingHorizontal: 24,
-    marginRight: 15,
-    borderRadius: 8,
-    marginVertical: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    borderRadius: 10,
+    width: '48%',
+    shadowColor: '#00B98E',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 5,
   },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
+  quickActionButtonText: {
+    color: 'white',
+    fontWeight: '600',
+    marginLeft: 10,
   },
-  ///
-
-  header: {
+  dashboardSection: {
+    paddingHorizontal: 20,
+  },
+  sectionTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: '700',
+    color: '#333',
     marginBottom: 20,
     textAlign: 'center',
   },
-  subHeader: {
+  sectionContainer: {
+    backgroundColor: 'white',
+    borderRadius: 15,
+    padding: 15,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  sectionHeaderText: {
     fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    marginTop: 20,
+    fontWeight: '600',
+    marginLeft: 10,
+    color: '#333',
   },
   resultsList: {
-    paddingBottom: 20,
+    paddingBottom: 10,
   },
   resultItem: {
-    backgroundColor: '#ffffff',
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 12,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 3,
+    backgroundColor: '#F7F9FC',
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  resultHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   resultTitle: {
     fontSize: 16,
-    fontWeight: 'bold',
-  },
-  resultType: {
-    fontSize: 14,
-    color: '#6c757d',
+    fontWeight: '600',
+    color: '#333',
+    flex: 1,
+    marginRight: 10,
   },
   resultScore: {
-    fontSize: 14,
-    color: '#28a745',
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#00B98E',
   },
   resultDate: {
     fontSize: 12,
     color: '#6c757d',
+    marginTop: 5,
   },
   leaderboardList: {
-    paddingBottom: 20,
+    paddingBottom: 10,
   },
   leaderboardItem: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: '#ffffff',
-    padding: 16,
-    borderRadius: 1,
-    marginBottom: 0,
-    borderColor: 'black',
+    alignItems: 'center',
+    paddingVertical: 12,
     borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
+  },
+  leaderboardRankContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#E6F0FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 15,
   },
   leaderboardRank: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '700',
     color: '#00B98E',
   },
   leaderboardName: {
-    fontSize: 16,
-    fontWeight: 'bold',
     flex: 1,
-    marginLeft: 10,
+    fontSize: 16,
+    fontWeight: '600',
   },
   leaderboardScore: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '700',
     color: '#00B98E',
   },
-  noDataText: {
-    fontSize: 14,
+  emptyState: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  emptyStateText: {
+    marginTop: 10,
     color: '#6c757d',
-    textAlign: 'center',
-    marginVertical: 10,
+    fontSize: 16,
   },
 });
 

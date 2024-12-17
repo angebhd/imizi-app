@@ -1,106 +1,205 @@
-import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, StyleSheet } from 'react-native'
-import React, { useState } from 'react';
-import { useRouter } from 'expo-router'
-
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, SafeAreaView, StyleSheet } from 'react-native';
+import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 
 import users from '@/services/users';
 import auth from '@/services/auth';
-import { Ionicons } from '@expo/vector-icons';
 
 const Profile = () => {
   const router = useRouter();
 
-  //getting user data from DB
-  const [userName, setUserName] = useState('');
-  const [email, setEmail] = useState('');
-  const [familyName, setFamilyName] = useState('No family yet');
+  // User data state
+  const [userData, setUserData] = useState({
+    fullName: '',
+    email: '',
+    familyName: 'No family yet'
+  });
 
-  const getUserData = async () => {
-    const data = await users.getData();
-    setUserName(data.firstName + " " + data.lastName);
-    setEmail(data.email);
-    setFamilyName(data.family.name + " family")
-  }
-  getUserData();
-  // go to family
-  const handlePress = (a:string) => {
-    router.navigate(a);
+  // Fetch user data
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const data = await users.getData();
+        setUserData({
+          fullName: `${data.firstName} ${data.lastName}`,
+          email: data.email,
+          familyName: data.family?.name ? `${data.family.name} Family` : 'No family yet'
+        });
+      } catch (error) {
+        console.error('Failed to fetch user data:', error);
+      }
+    };
 
-  }
-  // signout Logic
+    fetchUserData();
+  }, []);
+
+  // Navigation handler
+  const handleNavigation = (route: string) => {
+    router.navigate(route);
+  };
+
+  // Signout logic
   const signOut = async () => {
-    const status = await auth.remove();
+    try {
+      const status = await auth.remove();
+      if (status) {
+        router.navigate('/(auth)/sign-in');
+      } else {
+        console.error("Logout failed");
+        // Consider adding user-friendly error handling
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
 
-    if (status) {
-      console.log("Loug out success")
-      router.navigate('/(auth)/sign-in')
-    } else { console.log("logout failed") }
-
-  }
   return (
-    <SafeAreaView style={{ backgroundColor: '#fff', minHeight: '100%' }}>
-      <ScrollView style={{ padding: 20 }}>
-        <Text style={{ color: '#000', fontSize: 24, fontWeight: 'bold', }}>Profile</Text>
-        {/* <Text style={{ color: "#7C82A1", fontSize: 16, textAlign: "justify", marginTop: 20 }}></Text> */}
-
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Ionicons
-            name="person-circle-outline" // You can choose other icons from Ionicons
-            size={80} // Adjust the size of the icon
-            color="#00B98E" // You can change the color if you like
-            style={{ marginRight: 10 }} // Adds spacing between the icon and text
-          />
-          <View>
-            <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 5 }}>{userName} </Text>
-            <Text style={{ color: '#00B98E', fontWeight: 'bold' }}> {familyName} </Text>
-            {/* <Text> {email} </Text> */}
-          </View>
+    <SafeAreaView style={styles.container}>
+      {/* Profile Header */}
+      <View style={styles.profileHeader}>
+        <View style={styles.profileAvatar}>
+          <Ionicons name="person-circle" size={80} color="#00B98E" />
         </View>
-        <View style={{ marginTop: 30 }}>
-          <TouchableOpacity style={styles.button} onPress={() => handlePress("/family")}><Text style={styles.textButton}>My Family</Text><Ionicons name='arrow-forward-outline' size={24} /></TouchableOpacity>
-          <TouchableOpacity style={styles.button} ><Text style={styles.textButton} >Terms and conditions</Text><Ionicons name='arrow-forward-outline' size={24} /></TouchableOpacity>
-          <TouchableOpacity style={styles.button} ><Text style={styles.textButton} >Privacy</Text><Ionicons name='arrow-forward-outline' size={24} /></TouchableOpacity>
+        <Text style={styles.nameText}>{userData.fullName}</Text>
+        <Text style={styles.emailText}>{userData.email}</Text>
+        <Text style={styles.familyText}>{userData.familyName}</Text>
+      </View>
 
-          <TouchableOpacity style={{
-            backgroundColor: '#faa',
-            marginTop: 30,
-            paddingVertical: 12,
-            paddingHorizontal: 5,
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            borderRadius: 10
-
-          }} onPress={signOut}><Text style={styles.textButton} >Sign out </Text><Ionicons name='exit-outline' size={24} /></TouchableOpacity>
-        </View>
-
-
-      </ScrollView>
+      {/* Profile Menu */}
+      <View style={styles.menuContainer}>
+        <ProfileMenuItem 
+          icon="people-outline"
+          text="My Family" 
+          onPress={() => handleNavigation("/family")} 
+        />
+        <ProfileMenuItem 
+          icon="document-text-outline"
+          text="Terms and Conditions" 
+          onPress={() => handleNavigation("/terms")} 
+        />
+        <ProfileMenuItem 
+          icon="shield-outline"
+          text="Privacy Policy" 
+          onPress={() => handleNavigation("/privacy")} 
+        />
+        <ProfileMenuItem 
+          icon="log-out-outline"
+          text="Sign Out" 
+          onPress={signOut}
+          isLogout
+        />
+      </View>
     </SafeAreaView>
+  );
+};
 
-  )
-}
-
+// Reusable Menu Item Component
+const ProfileMenuItem = ({ 
+  icon, 
+  text, 
+  onPress, 
+  isLogout = false 
+}) => (
+  <TouchableOpacity 
+    style={[
+      styles.menuItem, 
+      isLogout && styles.logoutMenuItem
+    ]}
+    onPress={onPress}
+  >
+    <View style={styles.menuItemContent}>
+      <Ionicons 
+        name={icon} 
+        size={24} 
+        color={isLogout ? '#FF6B6B' : '#00B98E'} 
+      />
+      <Text style={[
+        styles.menuItemText,
+        isLogout && styles.logoutText
+      ]}>
+        {text}
+      </Text>
+    </View>
+    <Ionicons 
+      name="chevron-forward" 
+      size={24} 
+      color={isLogout ? '#FF6B6B' : '#00B98E'} 
+    />
+  </TouchableOpacity>
+);
 
 const styles = StyleSheet.create({
-  button: {
-    backgroundColor: '#79C3C52B',
-    marginVertical: 2,
-    paddingVertical: 12,
-    paddingHorizontal: 5,
-    display: 'flex',
+  container: {
+    flex: 1,
+    backgroundColor: '#F7F9FB',
+  },
+  profileHeader: {
+    alignItems: 'center',
+    paddingVertical: 30,
+    backgroundColor: 'white',
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  profileAvatar: {
+    marginBottom: 15,
+  },
+  nameText: {
+    fontSize: 22,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 5,
+  },
+  emailText: {
+    fontSize: 16,
+    color: '#666',
+    marginBottom: 5,
+  },
+  familyText: {
+    fontSize: 16,
+    color: '#00B98E',
+    fontWeight: '500',
+  },
+  menuContainer: {
+    paddingHorizontal: 20,
+    marginTop: 20,
+  },
+  menuItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderRadius: 10
-
+    backgroundColor: 'white',
+    paddingVertical: 15,
+    paddingHorizontal: 15,
+    borderRadius: 10,
+    marginBottom: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
-  textButton: {
-    fontSize: 18,
+  menuItemContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-
-
-})
+  menuItemText: {
+    fontSize: 16,
+    marginLeft: 15,
+    color: '#333',
+  },
+  logoutMenuItem: {
+    borderColor: '#FF6B6B',
+    borderWidth: 1,
+  },
+  logoutText: {
+    color: '#FF6B6B',
+  },
+});
 
 export default Profile;

@@ -44,7 +44,7 @@ const Explore = () => {
               <Text style={styles.textButton}>📝  Quiz
                 Challenges</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={()=> handleClick("/quiz/sundayAttempt")} >
               <Text style={styles.textButton}>🛡️ Sunday Special
                 Challenges</Text>
             </TouchableOpacity>
