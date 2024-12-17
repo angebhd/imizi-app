@@ -3,18 +3,20 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native';
-import { ScrollView } from 'react-native';
+// import { ScrollView } from 'react-native';
 
 
 import { useEffect, useState } from 'react';
 import { FlatList, ActivityIndicator } from 'react-native';
 import quiz from '@/services/quiz';
+import user from '@/services/users';
+import { ScrollView } from 'react-native-gesture-handler';
 
 // Define types
 type Result = {
-  quizId: string;
+  // quizId: string;
   title: string;
-  type: string;
+  // type: string;
   score: number;
   submittedAt: string;
 };
@@ -33,7 +35,6 @@ type RootStackParamList = {
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  ////
   const [userResults, setUserResults] = useState<Result[]>([]);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loadingResults, setLoadingResults] = useState(true);
@@ -43,8 +44,15 @@ const HomeScreen: React.FC = () => {
     const fetchUserResults = async () => {
       try {
         setLoadingResults(true);
-        const response = await quiz.getUserResults(); // API call for user results
-        setUserResults(response.results);
+        const response = await user.getData();
+        const quizData: Result[] = response.dailyQuizScores.map((item) => ({
+          quizId: item._id,
+          title: item.quizId.title,
+          score: item.score,
+          submittedAt: item.timestamp
+        }));
+
+        setUserResults(quizData);
       } catch (error) {
         console.error('Error fetching user results:', error);
       } finally {
@@ -55,7 +63,7 @@ const HomeScreen: React.FC = () => {
     const fetchLeaderboard = async () => {
       try {
         setLoadingLeaderboard(true);
-        const response = await quiz.getSundayLeaderboard(); // API call for leaderboard
+        const response = await quiz.getSundayLeaderboard();
         setLeaderboard(response.leaderboard);
       } catch (error) {
         console.error('Error fetching leaderboard:', error);
@@ -67,6 +75,8 @@ const HomeScreen: React.FC = () => {
     fetchUserResults();
     fetchLeaderboard();
   }, []);
+
+  //////
 
   const renderResultItem = ({ item }: { item: Result }) => (
     <View style={styles.resultItem}>
@@ -89,67 +99,87 @@ const HomeScreen: React.FC = () => {
   ///
 
   return (
-    <SafeAreaView style={{ backgroundColor: '#fff', minHeight: '100%' }}>
-      <ScrollView style={{ padding: 20, paddingTop: 60 }}>
-          <View>
-            <Text style={styles.title}>Welcome to the Quiz Section</Text>
-            <Text>Challenge yourself by answering questions that will help you to strengthen the coesion of your family </Text>
-            <ScrollView style={styles.containerButton} horizontal={true} showsHorizontalScrollIndicator={false} >
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => navigation.navigate('quiz/dailyList')}
-              >
-                <Text style={styles.buttonText}>Daily Quizzes</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => navigation.navigate('quiz/sundayAttempt')}
-              >
-                <Text style={styles.buttonText}>Sunday Quiz</Text>
-              </TouchableOpacity>
-            </ScrollView>
-          </View>
+    <SafeAreaView style={styles.container}>
+      <FlatList
+        data={[{ key: 'content' }]}
+        renderItem={() => (
+          <>
+            {/* Welcome Section */}
+            <View style={styles.welcomeSection}>
+              <Text style={styles.title}>Welcome to the Quiz Section</Text>
+              <Text>Challenge yourself by answering questions that will help you to strengthen the cohesion of your family</Text>
+              <View style={styles.containerButton}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => navigation.navigate('quiz/dailyList')}
+                >
+                  <Text style={styles.buttonText}>Daily Quizzes</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => navigation.navigate('quiz/sundayAttempt')}
+                >
+                  <Text style={styles.buttonText}>Sunday Quiz</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
 
-          {/* Dashbord */}
-          <View>
-            <Text style={styles.header}>Dashboard</Text>
+            {/* Dashboard Section */}
+            <View style={styles.dashboardSection}>
+              <Text style={styles.header}>Dashboard</Text>
 
-            {/* All Results Section */}
-            <Text style={styles.subHeader}>Your Quiz Results</Text>
-            {loadingResults ? (
-              <ActivityIndicator size="large" color="#007bff" />
-            ) : userResults.length > 0 ? (
-              <FlatList
-                data={userResults}
-                keyExtractor={(item) => item.quizId}
-                renderItem={renderResultItem}
-                contentContainerStyle={styles.resultsList}
-              />
-            ) : (
-              <Text style={styles.noDataText}>No results available yet.</Text>
-            )}
+              {/* Your Quiz Results */}
+              <Text style={styles.subHeader}>Your Quiz Results</Text>
+              {loadingResults ? (
+                <ActivityIndicator size="large" color="#007bff" />
+              ) : userResults.length > 0 ? (
+                <FlatList
+                  data={userResults}
+                  keyExtractor={(item) => item.quizId}
+                  renderItem={renderResultItem}
+                  scrollEnabled={false}
+                  contentContainerStyle={styles.resultsList}
+                />
+              ) : (
+                <Text style={styles.noDataText}>No results available yet.</Text>
+              )}
 
-            {/* Leaderboard Section */}
-            <Text style={styles.subHeader}>Sunday Quiz Leaderboard</Text>
-            {loadingLeaderboard ? (
-              <ActivityIndicator size="large" color="#007bff" />
-            ) : leaderboard.length > 0 ? (
-              <FlatList
-                data={leaderboard}
-                keyExtractor={(item, index) => `${item.familyName}-${index}`}
-                renderItem={renderLeaderboardItem}
-                contentContainerStyle={styles.leaderboardList}
-              />
-            ) : (
-              <Text style={styles.noDataText}>No leaderboard data available yet.</Text>
-            )}
-          </View>
-      </ScrollView>
+              {/* Leaderboard Section */}
+              <Text style={styles.subHeader}>Sunday Quiz Leaderboard</Text>
+              {loadingLeaderboard ? (
+                <ActivityIndicator size="large" color="#007bff" />
+              ) : leaderboard.length > 0 ? (
+                <FlatList
+                  data={leaderboard}
+                  keyExtractor={(item, index) => `${item.familyName}-${index}`}
+                  renderItem={renderLeaderboardItem}
+                  scrollEnabled={false}
+                  contentContainerStyle={styles.leaderboardList}
+                />
+              ) : (
+                <Text style={styles.noDataText}>No leaderboard data available yet.</Text>
+              )}
+            </View>
+          </>
+        )}
+        showsVerticalScrollIndicator={true}
+      />
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    paddingTop: 80
+  },
+  welcomeSection: {
+    padding: 20,
+  },
+  dashboardSection: {
+    padding: 20,
+  },
   containerButton: {
     flex: 1,
     flexDirection: 'row',
@@ -234,7 +264,7 @@ const styles = StyleSheet.create({
   leaderboardRank: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#007bff',
+    color: '#00B98E',
   },
   leaderboardName: {
     fontSize: 16,
