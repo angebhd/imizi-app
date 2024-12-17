@@ -31,14 +31,13 @@ const MyFamily = () => {
                     setLoading(true);
                     return;
                 }
-
                 setFamilyName(data.family.name);
                 setFamilyMembers(data.family.members || []);
                 setFamilyScore(data.family.score.toFixed(2) || 0);
                 setLoading(false);
             } catch (error) {
                 console.error('Error fetching family data:', error);
-                setLoading(false);
+                setLoading(true);
             }
         };
 

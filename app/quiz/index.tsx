@@ -94,7 +94,7 @@ const HomeScreen: React.FC = () => {
             <>
               {/* Welcome Section */}
               <View style={styles.welcomeSection}>
-                <Text style={styles.greeting}>Wlcome to the quiz section!</Text>
+                <Text style={styles.greeting}>Welcome to the quiz section!</Text>
                 <Text style={styles.subtitle}>
                   Strengthen your family bonds through engaging quizzes
                 </Text>

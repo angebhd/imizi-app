@@ -1,103 +1,223 @@
 import React from 'react';
-import { StyleSheet, View, Image, TouchableOpacity, Text, ScrollView, ImageBackground } from 'react-native';
+import { 
+  StyleSheet, 
+  View, 
+  Image, 
+  TouchableOpacity, 
+  Text, 
+  ScrollView, 
+  ImageBackground,
+  Dimensions, 
+  Linking
+} from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { 
+  Home as HomeIcon, 
+  Book, 
+  Users, 
+  Calendar, 
+  Play, 
+  User 
+} from 'lucide-react-native';
+import { useRouter } from 'expo-router';
+
+const { width } = Dimensions.get('window');
+
+const MENU_ITEMS = [
+  { 
+    icon: HomeIcon, 
+    title: 'Home', 
+    route: null,
+    active: true 
+  },
+  { 
+    icon: Play, 
+    title: 'Quiz', 
+    route: '/quiz',
+    active: true 
+  },
+  { 
+    icon: Users, 
+    title: 'My Family', 
+    route: '/family',
+    active: true 
+  },
+  { 
+    icon: Calendar, 
+    title: 'Daily Quizzes', 
+    route: '/quiz/dailyList',
+    active: true 
+  },
+  { 
+    icon: Book, 
+    title: 'Courses', 
+    route: '/free-course',
+    active: true 
+  },
+  { 
+    icon: User, 
+    title: 'Profile', 
+    route: '/(tabs)/profile',
+    active: true 
+  }
+];
+
+const BLOG_ITEMS = [
+  {
+    image: require('../../assets/images/Home/1.jpg'),
+    type: 'Blog',
+    title: 'Successful Stories in Family Engagement',
+    link : 'https://www.migeprof.gov.rw'
+  },
+  {
+    image: require('../../assets/images/Home/2.jpg'),
+    type: 'Blog',
+    title: 'Communication in Families',
+    link : 'https://www.migeprof.gov.rw'
+  },
+  {
+    image: require('../../assets/images/Home/3.jpg'),
+    type: 'Art',
+    title: 'Family Health and Nutrition',
+    link : 'https://www.migeprof.gov.rw'
+  },
+  {
+    image: require('../../assets/images/Home/4.jpeg'),
+    type: 'Blog',
+    title: 'Impact of Technology in Family Life',
+    link : 'https://www.migeprof.gov.rw'
+  },
+  {
+    image: require('../../assets/images/Home/4.jpg'),
+    type: 'Blog',
+    title: 'The Benefits of Family Sport',
+    link : 'https://www.migeprof.gov.rw'
+  },
+  {
+    image: require('../../assets/images/Home/5.jpg'),
+    type: 'Art',
+    title: 'Spending Quality Time Together',
+    link : 'https://www.migeprof.gov.rw'
+  }
+];
+
+const COURSE_ITEMS = Array(6).fill({
+  image: require('@/assets/images/Home/rec1.png'),
+  title: 'Little Scientists: Exploring the World',
+  description: 'Young learners become scientists as they explore'
+});
 
 const HomeScreen = () => {
+  const router = useRouter();
+
+  const renderMenuItem = (item, index) => (
+    <TouchableOpacity 
+      key={index} 
+      style={[
+        styles.menuButton, 
+        item.active ? {} : styles.menuButtonInactive
+      ]}
+      onPress={() => item.route && router.navigate(item.route)}
+    >
+      <item.icon 
+        color={item.active ? '#4ECDC4' : '#A0AEC0'} 
+        size={20} 
+      />
+      <Text style={[
+        styles.menuButtonText, 
+        item.active ? styles.activeMenuText : styles.inactiveMenuText
+      ]}>
+        {item.title}
+      </Text>
+    </TouchableOpacity>
+  );
+
+  const renderBlogItem = (item, index) => (
+    <TouchableOpacity key={index} style={styles.blogItemContainer} onPress={()=> Linking.openURL(item.link)}>
+      <ImageBackground 
+        source={item.image} 
+        style={styles.blogImage}
+        imageStyle={styles.blogImageStyle}
+      >
+        <LinearGradient
+          colors={['transparent', 'rgba(0,0,0,0.8)']}
+          style={styles.blogGradient}
+        >
+          <View style={styles.blogContent}>
+            <Text style={styles.blogType}>{item.type}</Text>
+            <Text style={styles.blogTitle} numberOfLines={2}>
+              {item.title}
+            </Text>
+          </View>
+        </LinearGradient>
+      </ImageBackground>
+    </TouchableOpacity>
+  );
+
+  const renderCourseItem = (item, index) => (
+    <View key={index} style={styles.courseItem}>
+      <Image source={item.image} style={styles.courseImage} />
+      <View style={styles.courseTextContainer}>
+        <Text style={styles.courseTitle} numberOfLines={1}>
+          {item.title}
+        </Text>
+        <Text style={styles.courseDescription} numberOfLines={1}>
+          {item.description}
+        </Text>
+      </View>
+    </View>
+  );
+
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <View style={{ flex: 2, flexDirection: 'row', alignItems: 'center' }}>
-          <Image source={require('../../assets/images/Home/Vector.png')} style={styles.logo} />
-          <Text style={styles.title}> Family Cohesion</Text>
+      <LinearGradient
+        colors={['#FF6B6B', '#4ECDC4']}
+        style={styles.gradientHeader}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+      >
+        <View style={styles.headerContent}>
+          <View style={styles.headerTitleContainer}>
+            <Image 
+              source={require('../../assets/images/Home/Vector.png')} 
+              style={styles.headerLogo} 
+            />
+            <Text style={styles.headerTitle}>Family Cohesion</Text>
+          </View>
+          <Image 
+            source={require('../../assets/images/Home/Group 121.png')} 
+            style={styles.headerImage}
+          />
         </View>
-        <Image source={require('../../assets/images/Home/Group 121.png')} />
-      </View>
-      <View>
-        <Text style={{ color: "#7C82A1", fontSize: 16, textAlign: "left" }}> Set aside regular time for open and honest
-          communication.</Text>
-      </View>
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={styles.menu}>
-        <TouchableOpacity style={styles.buttonh}>
-          <Text style={{ color: "#fff", }}>Home</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Activities</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Budgeting</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Courses</Text>
-        </TouchableOpacity><TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>History</Text>
-        </TouchableOpacity>
-      </ScrollView>
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={styles.featured}>
-        <View style={{ borderRadius: 20, marginRight: 30, overflow: "hidden" }}>
-          <ImageBackground source={require('../../assets/images/Home/1.png')} style={styles.imgb}>
-            <Image source={require('@/assets/images/Home/vec.png')} style={styles.featuredImg} />
-            <View style={styles.blogButton}>
-              <Text style={styles.blogButtonh}>Blog</Text>
-              <Text style={styles.blogButtonText}>Successful Stories in Family Engagement</Text>
-            </View>
-          </ImageBackground>
+      </LinearGradient>
 
-        </View>
-        <View style={{ borderRadius: 20, marginRight: 30, overflow: "hidden" }}>
-          <ImageBackground source={require('../../assets/images/Home/2.jpeg')} style={styles.imgb}>
-            <Image source={require('@/assets/images/Home/vec.png')} style={styles.featuredImg} />
-            <View style={styles.blogButton}>
-              <Text style={styles.blogButtonh}>ART</Text>
-              <Text style={styles.blogButtonText}>An updated daily front page</Text>
-            </View>
-          </ImageBackground>
-        </View>
-      </ScrollView>
-      <View style={styles.courses}>
- 
-      <View style={styles.main}>
-            <Image source={require('@/assets/images/Home/rec1.png')} style={styles.img}/>
-            <View style= {styles.sec}>
-                <Text style={styles.titlec} >Little Scientists: Exploring the World</Text>
-                <Text style= {styles.desc}>Young learners become scientists as they explore</Text>
-            </View>
-        </View>
-        <View style={styles.main}>
-            <Image source={require('@/assets/images/Home/rec1.png')} style={styles.img}/>
-            <View style= {styles.sec}>
-                <Text style={styles.titlec} >Little Scientists: Exploring the World</Text>
-                <Text style= {styles.desc}>Young learners become scientists as they explore</Text>
-            </View>
-        </View>
-        <View style={styles.main}>
-            <Image source={require('@/assets/images/Home/rec1.png')} style={styles.img}/>
-            <View style= {styles.sec}>
-                <Text style={styles.titlec} >Little Scientists: Exploring the World</Text>
-                <Text style= {styles.desc}>Young learners become scientists as they explore</Text>
-            </View>
-        </View>
-        <View style={styles.main}>
-            <Image source={require('@/assets/images/Home/rec1.png')} style={styles.img}/>
-            <View style= {styles.sec}>
-                <Text style={styles.titlec} >Little Scientists: Exploring the World</Text>
-                <Text style= {styles.desc}>Young learners become scientists as they explore</Text>
-            </View>
-        </View>
-        <View style={styles.main}>
-            <Image source={require('@/assets/images/Home/rec1.png')} style={styles.img}/>
-            <View style= {styles.sec}>
-                <Text style={styles.titlec} >Little Scientists: Exploring the World</Text>
-                <Text style= {styles.desc}>Young learners become scientists as they explore</Text>
-            </View>
-        </View>
-        <View style={styles.main}>
-            <Image source={require('@/assets/images/Home/rec1.png')} style={styles.img}/>
-            <View style= {styles.sec}>
-                <Text style={styles.titlec} >Little Scientists: Exploring the World</Text>
-                <Text style= {styles.desc}>Young learners become scientists as they explore</Text>
-            </View>
+      <View style={styles.contentContainer}>
+        <Text style={styles.tagline}>
+          Set aside regular time for open and honest communication.
+        </Text>
+
+        <ScrollView 
+          horizontal 
+          showsHorizontalScrollIndicator={false} 
+          style={styles.menuScrollView}
+        >
+          {MENU_ITEMS.map(renderMenuItem)}
+        </ScrollView>
+
+        <Text style={styles.sectionTitle}>Featured Blogs</Text>
+        <ScrollView 
+          horizontal 
+          showsHorizontalScrollIndicator={false} 
+          style={styles.blogScrollView}
+        >
+          {BLOG_ITEMS.map(renderBlogItem)}
+        </ScrollView>
+
+        <Text style={styles.sectionTitle}>Recommended Courses</Text>
+        <View style={styles.courseGrid}>
+          {COURSE_ITEMS.map(renderCourseItem)}
         </View>
       </View>
-
     </ScrollView>
   );
 };
@@ -105,120 +225,156 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    padding: 20,
-    paddingBottom:20
+    backgroundColor: '#F7F9FC',
   },
-  header: {
-    flex: 3,
+  gradientHeader: {
+    paddingVertical: 20,
+    paddingHorizontal: 15,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+  },
+  headerContent: {
     flexDirection: 'row',
-    // padding: 20,
+    justifyContent: 'space-between',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 30,
   },
-  logo: {
-    width: 20,
-    height: 20,
-  },
-  title: {
-    color: '#000',
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  content: {
-    flex: 1,
-    padding: 20,
-  },
-  menu: {
-    flex: 1,
-    width: '100%',
-  },
-  button: {
-    backgroundColor: '#F3F4F6',
-    borderRadius: 5,
-    padding: 15,
-    paddingBottom: 8,
-    paddingTop: 8,
-    margin: 10,
-    marginVertical: 5,
-  },
-  buttonh: {
-    backgroundColor: '#00B98E',
-    borderRadius: 5,
-    padding: 15,
-    paddingBottom: 8,
-    paddingTop: 8,
-    margin: 10,
-    marginVertical: 5,
-  },
-  buttonText: {
-    color: '#333',
-    fontWeight: 'bold',
-  },
-  featured: {
-    flex: 1,
-    marginTop: 20
-  },
-  imgb: {
-    width: 300,
-    height: 250,
-    flex: 1,
-    justifyContent: 'space-between',
-    alignItems: 'flex-end'
-  },
-  featuredImg: {
-    marginRight: 20,
-    marginTop: 20
-  },
-  blogButton: {
-    backgroundColor: '#00B98E80',
-    borderRadius: 5,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    marginTop: 10,
-    width: '100%'
-  },
-  blogButtonh: {
-    color: '#fff',
-    fontWeight: '100'
-  },
-  blogButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    textAlign: 'left'
-  },
-  courses:{
-    display: 'flex',
-    marginTop:30,
-    marginBottom: 40
-  },
-  main: {
-    flex: 1,
+  headerTitleContainer: {
     flexDirection: 'row',
-    flexWrap: 'nowrap',
-    marginTop:10
-
-},
-img: {
-    height: 80,
-    width: 80,
-    marginRight:10,
-},
-sec:{
-    flex:1,
+    alignItems: 'center',
+  },
+  headerLogo: {
+    width: 30,
+    height: 30,
+    marginRight: 10,
+  },
+  headerTitle: {
+    color: 'white',
+    fontSize: 24,
+    fontWeight: '700',
+  },
+  headerImage: {
+    width: 50,
+    height: 50,
+  },
+  contentContainer: {
+    paddingHorizontal: 15,
+    paddingTop: 20,
+  },
+  tagline: {
+    color: '#4A5568',
+    fontSize: 16,
+    textAlign: 'left',
+    marginBottom: 20,
+    lineHeight: 24,
+  },
+  menuScrollView: {
+    marginBottom: 20,
+  },
+  menuButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 10,
+    marginRight: 10,
+    marginVertical: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  menuButtonInactive: {
+    opacity: 0.5,
+  },
+  menuButtonText: {
+    marginLeft: 10,
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  activeMenuText: {
+    color: '#2D3748',
+  },
+  inactiveMenuText: {
+    color: '#A0AEC0',
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#2D3748',
+    marginBottom: 15,
+  },
+  blogScrollView: {
+    marginBottom: 20,
+  },
+  blogItemContainer: {
+    marginRight: 15,
+    width: width * 0.7,
+    borderRadius: 15,
+    overflow: 'hidden',
+  },
+  blogImage: {
+    width: '100%',
+    height: 250,
+    justifyContent: 'flex-end',
+  },
+  blogImageStyle: {
+    borderRadius: 15,
+  },
+  blogGradient: {
+    height: '50%',
+    justifyContent: 'flex-end',
+    padding: 15,
+  },
+  blogType: {
+    color: '#4ECDC4',
+    fontSize: 14,
+    marginBottom: 5,
+  },
+  blogTitle: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: '700',
+  },
+  courseGrid: {
     flexDirection: 'column',
-    width: '100%'
-},
-titlec:{
-    color:'#3C82A1',
-    fontWeight: 100,
-},
-desc:{
-
-}
-
-
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  courseItem: {
+    // width: '48%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 10,
+    marginBottom: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  courseImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 10,
+    marginRight: 15,
+  },
+  courseTextContainer: {
+    flex: 1,
+  },
+  courseTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#2D3748',
+    marginBottom: 5,
+  },
+  courseDescription: {
+    fontSize: 14,
+    color: '#4A5568',
+  },
 });
 
 export default HomeScreen;

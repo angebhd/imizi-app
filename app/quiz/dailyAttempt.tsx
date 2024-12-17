@@ -32,10 +32,12 @@ type Question = {
 
 type FormattedAnswer = {
   questionText: string;
+  userSelectedOption: string | null;
+  correctOption: string;
+  isCorrect: boolean;
   options: Array<{
     text: string;
     isCorrect: boolean;
-    choosen: boolean;
   }>;
   points: number;
 };
@@ -55,6 +57,7 @@ const DailyAttempt: React.FC = () => {
   const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
+
   // Animated values
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0)).current;
@@ -67,7 +70,7 @@ const DailyAttempt: React.FC = () => {
         const response = await quiz.getQuiz(quizId);
         setTitle(response.quiz.title);
         setQuestions(response.quiz.questions);
-        
+
         // Animate in questions
         Animated.parallel([
           Animated.timing(fadeAnim, {
@@ -174,24 +177,24 @@ const DailyAttempt: React.FC = () => {
 
   const renderOption = (questionIndex: number, option: Option, answeredQuestion?: FormattedAnswer) => {
     const isSelected = userResponses[questionIndex] === option.text;
-    const isCorrect = answeredQuestion 
-      ? option.isCorrect 
+    const isCorrect = answeredQuestion
+      ? option.isCorrect
       : false;
-    const isIncorrect = answeredQuestion 
-      ? (isSelected && !option.isCorrect) 
+    const isIncorrect = answeredQuestion
+      ? (isSelected && !option.isCorrect)
       : false;
 
     return (
-      <Animated.View 
+      <Animated.View
         style={[
           styles.optionContainer,
           {
             transform: [
-              { 
+              {
                 scale: slideAnim.interpolate({
                   inputRange: [0, 1],
                   outputRange: [0.9, 1]
-                }) 
+                })
               }
             ]
           }
@@ -241,11 +244,11 @@ const DailyAttempt: React.FC = () => {
           strokeDashoffset={circumference - progress}
           strokeLinecap="round"
         />
-        <Text 
-          x={radius} 
-          y={radius} 
-          textAnchor="middle" 
-          fontSize="24" 
+        <Text
+          x={radius}
+          y={radius}
+          textAnchor="middle"
+          fontSize="24"
           fontWeight="bold"
           fill="#00B98E"
         >
@@ -262,16 +265,16 @@ const DailyAttempt: React.FC = () => {
 
     if (resultsVisible) {
       return (
-        <Animated.View 
+        <Animated.View
           style={[
             styles.resultsContainer,
-            { 
+            {
               transform: [
-                { 
+                {
                   scale: scaleAnim.interpolate({
                     inputRange: [0, 1, 1.2],
                     outputRange: [0.5, 1, 1.2]
-                  }) 
+                  })
                 }
               ]
             }
@@ -281,8 +284,8 @@ const DailyAttempt: React.FC = () => {
           <Text style={styles.resultTitle}>
             {score >= 70 ? 'Great Job!' : 'Keep Practicing'}
           </Text>
-          <TouchableOpacity 
-            style={styles.goBackButton} 
+          <TouchableOpacity
+            style={styles.goBackButton}
             onPress={() => navigation.goBack()}
           >
             <Text style={styles.goBackText}>Back to Quizzes</Text>
@@ -292,24 +295,25 @@ const DailyAttempt: React.FC = () => {
     }
 
     return (
-      <Animated.View 
+      <Animated.View
         style={[
-          styles.quizContainer, 
-          { 
+          styles.quizContainer,
+          {
             opacity: fadeAnim,
             transform: [
-              { 
+              {
                 scale: scaleAnim.interpolate({
                   inputRange: [0, 1],
                   outputRange: [0.8, 1]
-                }) 
+                })
               }
-            ]
+            ],
+            paddingTop: 40
           }
         ]}
       >
-        <LinearGradient 
-          colors={['#f8f9fa', '#e9ecef']} 
+        <LinearGradient
+          colors={['#f8f9fa', '#e9ecef']}
           style={styles.gradientBackground}
         >
           <Text style={styles.title}>{title}</Text>
@@ -318,15 +322,15 @@ const DailyAttempt: React.FC = () => {
               {`Question ${currentQuestionIndex + 1} of ${questions.length}`}
             </Text>
           </View>
-          
+
           <View style={styles.questionItem}>
             <Text style={styles.questionText}>
               {questions[currentQuestionIndex].questionText}
             </Text>
-            {questions[currentQuestionIndex].options.map((option, optionIndex) => 
+            {questions[currentQuestionIndex].options.map((option, optionIndex) =>
               renderOption(
-                currentQuestionIndex, 
-                option, 
+                currentQuestionIndex,
+                option,
                 resultsVisible ? formattedAnswers[currentQuestionIndex] : undefined
               )
             )}
@@ -334,26 +338,26 @@ const DailyAttempt: React.FC = () => {
 
           <View style={styles.navigationButtons}>
             {currentQuestionIndex > 0 && (
-              <TouchableOpacity 
-                style={styles.navButton} 
+              <TouchableOpacity
+                style={styles.navButton}
                 onPress={() => setCurrentQuestionIndex(prev => prev - 1)}
               >
                 <Text style={styles.navButtonText}>Previous</Text>
               </TouchableOpacity>
             )}
             {currentQuestionIndex < questions.length - 1 ? (
-              <TouchableOpacity 
-                style={styles.navButton} 
+              <TouchableOpacity
+                style={styles.navButton}
                 onPress={() => setCurrentQuestionIndex(prev => prev + 1)}
               >
                 <Text style={styles.navButtonText}>Next</Text>
               </TouchableOpacity>
             ) : (
-              <TouchableOpacity 
-                style={styles.submitButton} 
+              <TouchableOpacity
+                style={styles.submitButton}
                 onPress={showConfirmationModal}
               >
-                <Text style={styles.submitButtonText}>Submit Quiz</Text>
+                <Text style={styles.submitButtonText}>Submit</Text>
               </TouchableOpacity>
             )}
           </View>
@@ -377,14 +381,14 @@ const DailyAttempt: React.FC = () => {
             <Text style={styles.modalTitle}>Confirm Submission</Text>
             <Text style={styles.modalText}>Are you sure you want to submit your answers?</Text>
             <View style={styles.modalButtonContainer}>
-              <TouchableOpacity 
-                style={[styles.modalButton, styles.cancelButton]} 
+              <TouchableOpacity
+                style={[styles.modalButton, styles.cancelButton]}
                 onPress={() => setIsConfirmationModalVisible(false)}
               >
                 <Text style={styles.modalButtonText}>Cancel</Text>
               </TouchableOpacity>
-              <TouchableOpacity 
-                style={[styles.modalButton, styles.confirmButton]} 
+              <TouchableOpacity
+                style={[styles.modalButton, styles.confirmButton]}
                 onPress={handleSubmit}
               >
                 <Text style={styles.modalButtonText}>Submit</Text>

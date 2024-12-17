@@ -2,20 +2,22 @@
   "expo": {
     "name": "Imizi",
     "slug": "Imizi",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.angebhd.Imizi"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon2.png",
         "backgroundColor": "#00B98E"
-      }
+      },
+      "package": "com.angebhd.Imizi"
     },
     "web": {
       "bundler": "metro",
@@ -36,6 +38,9 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "projectId": "c0f66eed-f92b-4c45-a6ce-a41a26bd861c"
     }
   }
 }

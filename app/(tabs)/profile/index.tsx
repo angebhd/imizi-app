@@ -44,7 +44,7 @@ const Profile = () => {
     try {
       const status = await auth.remove();
       if (status) {
-        router.navigate('/(auth)/sign-in');
+        router.replace('/(auth)/sign-in');
       } else {
         console.error("Logout failed");
         // Consider adding user-friendly error handling
@@ -76,12 +76,12 @@ const Profile = () => {
         <ProfileMenuItem 
           icon="document-text-outline"
           text="Terms and Conditions" 
-          onPress={() => handleNavigation("/terms")} 
+          onPress={() => handleNavigation("./")} 
         />
         <ProfileMenuItem 
           icon="shield-outline"
           text="Privacy Policy" 
-          onPress={() => handleNavigation("/privacy")} 
+          onPress={() => handleNavigation("./")} 
         />
         <ProfileMenuItem 
           icon="log-out-outline"

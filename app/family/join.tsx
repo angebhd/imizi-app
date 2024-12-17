@@ -23,8 +23,8 @@ const JoinFamily = () => {
 
     const join = async () => {
         const resp = await family.join();
-        if (resp === 200){ 
-            router.navigate('/(tabs)/profile')
+        if (resp === 201){ 
+            router.back()
         }else{
             console.log("Invite failed");
             
