@@ -39,7 +39,6 @@ app-example
  
 # By me
 .env
-assets/
 #### Other by me
 android/
 ios/
